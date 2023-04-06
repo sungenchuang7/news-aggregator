@@ -225,6 +225,7 @@ public class IndexBuilder implements IIndexBuilder {
      */
     @Override
     public Collection<Map.Entry<String, List<String>>> buildHomePage(Map<?, ?> invertedIndex) {
+        // Return value should be like [entry1<word1, [doc1, doc3]>, entry2<word2, [doc4, doc6]>, ...] ?
         // Collection can list or TreeSet (sorted)
         List<Map.Entry<String, List<String>>> ret = new ArrayList<>();
 
@@ -282,6 +283,14 @@ public class IndexBuilder implements IIndexBuilder {
      */
     @Override
     public Collection<?> createAutocompleteFile(Collection<Map.Entry<String, List<String>>> homepage) {
+        // Question: what should I return? Just a collection of words (Strings)?
+
+        // NO DUPLICATES!
+
+        // first line: total # of words
+        //        0 word
+
+
         // (For auto-grader) first line written into the file should be the number of terms
 
         // sorted return type!
@@ -290,22 +299,27 @@ public class IndexBuilder implements IIndexBuilder {
 
         // Use BufferedWriter to write into the file
 
-        List<String> ret = new ArrayList<>();
+//        List<String> ret = new ArrayList<>();
+        Set<String> ret = new TreeSet<>();
 
         try {
             BufferedWriter bw = new BufferedWriter(new FileWriter("autocomplete.txt"));
+            bw.write(homepage.size());
+            bw.newLine();
+
+            for (Map.Entry<String, List<String>> entry : homepage) {
+                String word = entry.getKey();
+                bw.write("       0 " + word);
+                bw.newLine();
+                ret.add(word);
+            }
 
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
 
-        for (Map.Entry<String, List<String>> entry : homepage) {
-            String word = entry.getKey();
 
-        }
-
-
-        return null;
+        return ret;
     }
 
     /**
